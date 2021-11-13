@@ -1,28 +1,27 @@
 from PIL import Image
 import numpy as np
-img = Image.open("img2.jpg")
-arr = np.array(img)
-a = len(arr)
-a1 = len(arr[1])
-i = 0
-while i < a - 11:
-    j = 0
-    while j < a1 - 11:
-        s = 0
-        for n in range(i, i + 10):
-            for n1 in range(j, j + 10):
-                n1 = arr[n][n1][0]
-                n2 = arr[n][n1][1]
-                n3 = arr[n][n1][2]
-                M = n1 + n2 + n3
-                s += M
-        s = int(s // 100)
-        for n in range(i, i + 10):
-            for n1 in range(j, j + 10):
-                arr[n][n1][0] = int(s // 50) * 50
-                arr[n][n1][1] = int(s // 50) * 50
-                arr[n][n1][2] = int(s // 50) * 50
-        j = j + 10
-    i = i + 10
-res = Image.fromarray(arr)
+
+
+def convert_to_pixelart(image, chunk_size=10, grey_gradation=5):
+    arr = np.array(image)
+    gradient = chunk_size * grey_gradation
+    for x in range(0, arr.shape[0], chunk_size):
+        for y in range(0, arr.shape[1], chunk_size):
+            grey = sum(map(lambda n: int(n) / 3, arr[x:x + chunk_size, y:y + chunk_size].flatten()))
+            grey = int(grey / chunk_size ** 2 // gradient) * gradient
+            arr[x:x + chunk_size, y:y + chunk_size] = grey
+    return arr
+
+
+mage_name = input("Введите название файла изображения: ")
+
+mosaic = input("Введите размер мозайки(или нажмите Ввод для значения по-умолчанию - 10): ")
+mosaic = int(mosaic) if mosaic else 10
+
+gradation = input("Введите шаг градации(или нажмите Ввод для значения по-умолчанию - 5): ")
+gradation = int(gradation) if gradation else 5
+
+img = Image.open(image_name)
+res = Image.fromarray(convert_to_pixelart(img, mosaic, gradation))
 res.save('res.jpg')
+print("Результат сохранён как res.jpg")
