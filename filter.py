@@ -1,28 +1,25 @@
-from PIL import Image
 import numpy as np
-img = Image.open("img2.jpg")
+from PIL import Image
+
+input_file = input()
+outpit_file = input()
+img = Image.open(input_file)
 arr = np.array(img)
-a = len(arr)
-a1 = len(arr[1])
+height = len(arr)
+width = len(arr[1])
+mosaic_size = 10;
+grayscale = 50;
+
 i = 0
-while i < a - 11:
+while i < height:
     j = 0
-    while j < a1 - 11:
-        s = 0
-        for n in range(i, i + 10):
-            for n1 in range(j, j + 10):
-                n1 = arr[n][n1][0]
-                n2 = arr[n][n1][1]
-                n3 = arr[n][n1][2]
-                M = n1 + n2 + n3
-                s += M
-        s = int(s // 100)
-        for n in range(i, i + 10):
-            for n1 in range(j, j + 10):
-                arr[n][n1][0] = int(s // 50) * 50
-                arr[n][n1][1] = int(s // 50) * 50
-                arr[n][n1][2] = int(s // 50) * 50
-        j = j + 10
-    i = i + 10
+    while j < width:
+        pixel = arr[i: i + mosaic_size, j: j + mosaic_size]
+        pixel_color = (pixel.sum() / 3) // (100 * grayscale) * grayscale
+        new_pixel = np.full(300, pixel_color).reshape(10, 10, 3)
+        arr[i: i + mosaic_size, j: j + mosaic_size] = new_pixel
+        j = j + mosaic_size
+    i = i + mosaic_size
+
 res = Image.fromarray(arr)
-res.save('res.jpg')
+res.save(outpit_file)
