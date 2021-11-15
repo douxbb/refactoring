@@ -1,7 +1,9 @@
 import numpy as np
 from PIL import Image
 
-img = Image.open("img2.jpg")
+input_file = input()
+outpit_file = input()
+img = Image.open(input_file)
 arr = np.array(img)
 height = len(arr)
 width = len(arr[1])
@@ -20,4 +22,4 @@ while i < height:
     i = i + mosaic_size
 
 res = Image.fromarray(arr)
-res.save('res.jpg')
+res.save(outpit_file)
