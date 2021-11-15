@@ -1,28 +1,31 @@
-from PIL import Image
 import numpy as np
+from PIL import Image
+
 img = Image.open("img2.jpg")
 arr = np.array(img)
-a = len(arr)
-a1 = len(arr[1])
+height = len(arr)
+width = len(arr[1])
+mosaic_size = 10;
+grayscale = 50;
+
 i = 0
-while i < a:
+while i < height:
     j = 0
-    while j < a1:
-        s = 0
-        for n in range(i, i + 10):
-            for n1 in range(j, j + 10):
-                c1 = arr[n][n1][0]
-                c2 = arr[n][n1][1]
-                c3 = arr[n][n1][2]
-                M = (int(c1) + int(c2) + int(c3)) / 3
-                s += M
-        s = int(s // 100)
-        for n in range(i, i + 10):
-            for n1 in range(j, j + 10):
-                arr[n][n1][0] = int(s // 50) * 50
-                arr[n][n1][1] = int(s // 50) * 50
-                arr[n][n1][2] = int(s // 50) * 50
-        j = j + 10
-    i = i + 10
+    while j < width:
+        pixel = 0
+        for n in range(i, i + mosaic_size):
+            for n1 in range(j, j + mosaic_size):
+                r = int(arr[n][n1][0])
+                g = int(arr[n][n1][1])
+                b = int(arr[n][n1][2])
+                average = (r + g + b) / 3
+                pixel += average
+        pixel = pixel // (100 * grayscale) * grayscale
+        for n in range(i, i + mosaic_size):
+            for n1 in range(j, j + mosaic_size):
+                arr[n][n1] = pixel
+        j = j + mosaic_size
+    i = i + mosaic_size
+
 res = Image.fromarray(arr)
 res.save('res.jpg')
