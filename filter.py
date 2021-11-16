@@ -16,7 +16,14 @@ def image_to_pixelart(filename, pixel_size, gradation_step):
     return arr
 
 
-arr = image_to_pixelart('img2.jpg', 10, 50)
+filename = input('Image filename: ')
+result_filename = input('Result image filename: ')
+pixel_size = input("Pixel size (by default: 10): ")
+pixel_size = int(pixel_size) if pixel_size else 10
+gradation_step = input("Gradation step (by default 50): ")
+gradation_step = int(gradation_step) if gradation_step else 50
+
+arr = image_to_pixelart(filename, pixel_size, gradation_step)
 
 res = Image.fromarray(arr)
-res.save('res.jpg')
+res.save(result_filename)
