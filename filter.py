@@ -4,12 +4,12 @@ import numpy as np
 
 def convert_image_to_pixelart(image, chunk_size=10, grey_gradation=5):
     arr = np.array(image)
-    gradient = chunk_size * grey_gradation
+    gradient = 255 // grey_gradation
 
     for x in range(0, arr.shape[0], chunk_size):
         for y in range(0, arr.shape[1], chunk_size):
-            grey = sum(map(lambda n: int(n)/3, arr[x:x+chunk_size, y:y+chunk_size].flatten()))
-            grey = int(grey / chunk_size ** 2 // gradient) * gradient
+            grey = arr[x:x+chunk_size, y:y+chunk_size].sum() / 3
+            grey = grey / chunk_size ** 2 // gradient * gradient
 
             arr[x:x+chunk_size, y:y+chunk_size] = grey
 
