@@ -1,28 +1,29 @@
 from PIL import Image
 import numpy as np
-img = Image.open("img2.jpg")
-arr = np.array(img)
-a = len(arr)
-a1 = len(arr[1])
-i = 0
-while i < a - 11:
-    j = 0
-    while j < a1 - 11:
-        s = 0
-        for n in range(i, i + 10):
-            for n1 in range(j, j + 10):
-                n1 = arr[n][n1][0]
-                n2 = arr[n][n1][1]
-                n3 = arr[n][n1][2]
-                M = n1 + n2 + n3
-                s += M
-        s = int(s // 100)
-        for n in range(i, i + 10):
-            for n1 in range(j, j + 10):
-                arr[n][n1][0] = int(s // 50) * 50
-                arr[n][n1][1] = int(s // 50) * 50
-                arr[n][n1][2] = int(s // 50) * 50
-        j = j + 10
-    i = i + 10
+
+
+def image_to_pixelart(filename, pixel_size, gradation_step):
+    img = Image.open(filename)
+    arr = np.array(img)
+    height = len(arr)
+    width = len(arr[1])
+
+    for x in range(0, width, pixel_size):
+        for y in range(0, height, pixel_size):
+            sum_pixels_color = sum(map(lambda n: int(n) / 3, arr[y:y + pixel_size, x:x + pixel_size].flatten()))
+            monochrome_color = int(sum_pixels_color / pixel_size ** 2 // gradation_step) * gradation_step
+            arr[y:y + pixel_size, x:x + pixel_size] = monochrome_color
+    return arr
+
+
+filename = input('Image filename: ')
+result_filename = input('Result image filename: ')
+pixel_size = input("Pixel size (by default: 10): ")
+pixel_size = int(pixel_size) if pixel_size else 10
+gradation_step = input("Gradation step (by default 50): ")
+gradation_step = int(gradation_step) if gradation_step else 50
+
+arr = image_to_pixelart(filename, pixel_size, gradation_step)
+
 res = Image.fromarray(arr)
-res.save('res.jpg')
+res.save(result_filename)
