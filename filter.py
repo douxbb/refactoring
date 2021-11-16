@@ -1,11 +1,17 @@
 from PIL import Image
 import numpy as np
 
+correct_path = False
 CELL_X_OFFSET = 10
 CELL_Y_OFFSET = 10
 GREY_GRADATION = 50
-img = Image.open(
-    "C:\\Users\Статик\Desktop\\refactoring\img2.jpg")  # по какой-то причине не работает относительный адрес к картинке
+while not correct_path:
+    img_path = input("Enter path to image for filtering: ")
+    try:
+        img = Image.open(img_path)
+        correct_path = True
+    except:
+        print("Incorrect path/file format, please try again")
 img_matrix = np.array(img)
 len_x = len(img_matrix)
 len_y = len(img_matrix[1])
@@ -22,4 +28,11 @@ while cell_x < len_x:
         cell_y = cell_y + CELL_Y_OFFSET
     cell_x = cell_x + CELL_X_OFFSET
 res = Image.fromarray(img_matrix)
-res.save('C:\\Users\Статик\Desktop\\refactoring\\res.jpg')  # то же самое что и в первом случае
+correct_path = False
+while not correct_path:
+    res_path = input("Enter path to resulting image: ")
+    try:
+        res.save(res_path)
+        correct_path = True
+    except:
+        print("Incorrect path/file format, please try again")
