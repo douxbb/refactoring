@@ -43,17 +43,24 @@ def get_mosaic(graid, img_width, img_height, mosaic_size, img_arr):
 
 
 def main():
-    img_input = "img2.jpg"
-    img_output = '1112sdad.jpg'
+    img_input = input('Введите полный путь исходного изображения:\n')
+
+    img_output = input('Введите полный путь конечного изображения:\n')
+
+    mosaic_size = int(input('Введите размер мозайки:\n'))
+
+    step_gray = int(input('Введите кол-во шагов градаций:\n'))
+
     img = Image.open(img_input)
     img_arr = np.array(img, dtype=np.uint32)
+
     img_width = len(img_arr)
     img_height = len(img_arr[1])
-    mosaic_size = 10
-    step_gray = 5
-    graid = 255 / step_gray
 
-    mosaic = get_mosaic(graid, img_width, img_height, mosaic_size, img_arr)
+    gray = 255 / step_gray
+
+    mosaic = get_mosaic(gray, img_width, img_height, mosaic_size, img_arr)
+
     res = Image.fromarray(mosaic.astype(np.uint8))
     res.save(img_output)
 
