@@ -29,6 +29,11 @@ def pixelizate(path_to_source, block_size=10, grey_value=5):
     return arr
 
 
-img = Image.open("img2.jpg")
+img_path = input('Введите путь до изображения:')
+chunk_size = input('Введите размер блоков мозаики в пикселях (default 10):')
+gray_scale = input('Введите шаг градации (default 5):')
+
+img = Image.open(img_path)
 res = Image.fromarray(pixelizate(img))
 res.save('res.jpg')
+print('Сохранено в файл res.jpg')
