@@ -1,28 +1,34 @@
 from PIL import Image
 import numpy as np
+
+
+def pixelizate(path_to_source, block_size=10, grey_value=5):
+    arr = np.array(path_to_source)
+    gradient = block_size * grey_value
+    width = len(arr)
+    height = len(arr[1])
+
+    for i in range(0, width - block_size + 1, block_size):
+        for j in range(0, height - block_size + 1, block_size):
+            grey = 0
+
+            for x in range(i, i + block_size):
+                for y in range(j, j + block_size):
+                    light = np.sum(arr[x][y])
+                    grey += light / 3
+
+            grey = int(grey // block_size ** 2)
+
+            for x in range(i, i + block_size):
+                for y in range(j, j + block_size):
+                    block_grey = int(grey // gradient) * gradient
+                    arr[x][y][0] = block_grey
+                    arr[x][y][1] = block_grey
+                    arr[x][y][2] = block_grey
+
+    return arr
+
+
 img = Image.open("img2.jpg")
-arr = np.array(img)
-a = len(arr)
-a1 = len(arr[1])
-i = 0
-while i < a - 9:
-    j = 0
-    while j < a1 - 9:
-        s = 0
-        for n in range(i, i + 10):
-            for y in range(j, j + 10):
-                n1 = int(arr[n][y][0])
-                n2 = int(arr[n][y][1])
-                n3 = int(arr[n][y][2])
-                M = n1 + n2 + n3
-                s += M / 3
-        s = int(s // 100)
-        for n in range(i, i + 10):
-            for y in range(j, j + 10):
-                arr[n][y][0] = int(s // 50) * 50
-                arr[n][y][1] = int(s // 50) * 50
-                arr[n][y][2] = int(s // 50) * 50
-        j = j + 10
-    i = i + 10
-res = Image.fromarray(arr)
+res = Image.fromarray(pixelizate(img))
 res.save('res.jpg')
